@@ -1,5 +1,5 @@
 global !p
-def package_calc(path):
+def package_define(path):
   no_src = re.sub('^.*?src/', '', path)
   no_src = re.sub('/', '.', no_src)
   no_src = re.sub('^(main|test)\.', '', no_src)
@@ -38,7 +38,7 @@ endsnippet
 
 post_jump "expand(snip)"
 snippet skel
-package `!p snip.rv=package_calc(path)`
+package `!p snip.rv=package_define(path)`
 
 class$1
 endsnippet
@@ -46,5 +46,13 @@ endsnippet
 post_jump "expand(snip)"
 snippet ske
 skel$1
+endsnippet
+
+snippet '(\s*)([$0-9A-Za-z_]*).ret' "Return snippet" r 
+`!p
+if not match.group(2):
+  snip.rv = match.group(1) + 'return;'
+else: 
+  snip.rv = match.group(1) + 'return ' + match.group(2) + ';'`
 endsnippet
 
