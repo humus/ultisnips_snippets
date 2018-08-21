@@ -1,0 +1,50 @@
+global !p
+def package_calc(path):
+  no_src = re.sub('^.*?src/', '', path)
+  no_src = re.sub('/', '.', no_src)
+  no_src = re.sub('^(main|test)\.', '', no_src)
+  no_src = re.sub('^java\.', '', no_src)
+  return re.sub('\.java$', '', no_src)
+def expand(text, jump_pos=1):
+  if snip.tabstop != jump_pos:
+    return
+  vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+
+endglobal
+
+snippet { "{}"
+{
+	${0://pass}
+}
+endsnippet
+
+
+snippet 'test (\S+(\s+\S+)*)+$' "A simple test for java code" r
+@Test
+public void test`!p
+import re
+snip.rv = re.sub(r'(^\w|\s(\w))', lambda m: m.group(1).strip().capitalize(), match.group(1))`() {
+	$0
+}
+endsnippet
+
+snippet class
+public class `!p
+import re
+snip.rv = re.sub(r'(\w+)\.(\w+)$', r'\1', snip.fn)` {
+	$0
+}
+endsnippet
+
+post_jump "expand(snip)"
+snippet skel
+package `!p snip.rv=package_calc(path)`
+
+class$1
+endsnippet
+
+post_jump "expand(snip)"
+snippet ske
+skel$1
+endsnippet
+
