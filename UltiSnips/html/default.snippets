@@ -1,0 +1,27 @@
+priority -50
+
+snippet html
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width" />
+			<title>${1:`substitute(vim_snippets#Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
+			${2:link}
+		</head>
+		<body>
+			${0:body}
+		</body>
+</html>
+endsnippet
+
+snippet T "inline tag" bi
+<${1:span}>${0:<!-- content -->}</$1>
+endsnippet
+
+snippet t "generic tag, block"
+<${1:div}>
+	$0
+</$1>
+endsnippet
+

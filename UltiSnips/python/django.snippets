@@ -1,0 +1,87 @@
+priority -50
+
+snippet '(\S+),\s{0,2}(\S+).p' "path snippet" r
+path(`!p
+snip.rv = match.group(1) + ', ' + match.group(2)
+`),
+endsnippet
+
+snippet '(\S+)[,.]\s{0,2}(\S+).path' "path snippet" r
+path(`!p
+snip.rv = "'" + match.group(1) + "', " + match.group(2)
+`),
+endsnippet
+
+snippet '(\s*)([$0-9A-Za-z_]*).ret' "Return snippet" r
+return `!p
+snip.rv = match.group(1) + 'return ' + match.group(2)`
+endsnippet
+
+snippet as_view "TemplateView.as_view"
+TemplateView.as_view(template_name='$1')$0
+endsnippet
+
+snippet entity "Django entity"
+class ${1:Model}(models.Model):
+	$0
+endsnippet
+
+snippet fieldchar "CharField" bi
+${1:charfield} = models.CharField(max_length=${2:255})$0
+endsnippet
+
+snippet fieldtext "TextField" bi
+${1:textfield} = models.TextField()$0
+endsnippet
+
+snippet slugfield "SlugField" bi
+${1:slug} = models.SlugField(unique=True)$0
+endsnippet
+
+snippet modeladmin "Model admin"
+class ${1:MyModel}Admin(admin.ModelAdmin):
+	model = $1
+	list_display = ('id', )
+	# prepopulated_fields = {'slug': ('slug_filed', ), }
+
+
+# admin.site.register($1, $1Admin)
+endsnippet
+
+snippet '(\S+).all' "objects.all" r
+`!p snip.rv = match.group(1)`.objects.all()
+endsnippet
+
+snippet '(\S+).get' "objects.get()" r
+`!p snip.rv = match.group(1)`.objects.get($0)
+endsnippet
+
+snippet '(\S+).filter' "objects.filter()" r
+`!p snip.rv = match.group(1)`.objects.filter($0)
+endsnippet
+
+snippet defreq "def view(request):"
+def ${1:index}(request$2):
+	${0:pass}
+endsnippet
+
+snippet formsfile "forms file"
+from django.forms import ModelForm
+from .models import ${1:AModel}
+endsnippet
+
+snippet modelform "ModelForm"
+class ${1:Model}Form(ModelForm):
+	class Meta:
+		model = $1
+		fields = ('name', $0)
+endsnippet
+
+snippet registrationconf "config of registration 2.0"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'testing@example.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
+EMAIL_PORT = 1025
+endsnippet

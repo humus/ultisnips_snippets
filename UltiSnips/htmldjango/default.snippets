@@ -1,0 +1,48 @@
+priority -50
+
+extends html
+
+snippet humanize "load humanize" bi
+{% load humanize  %}
+endsnippet
+
+snippet staticfiles "load staticfiles" bi
+{% load staticfiles  %}
+endsnippet
+
+snippet di "django inline" bi
+{% $1 %}$0
+endsnippet
+
+
+snippet block "a django block"
+{% block ${1:name} %}
+	$0
+{% endblock $1 %}
+endsnippet
+
+snippet ex "exteds" bi
+{% extends '${1:base.html}' %}
+endsnippet
+
+snippet 'if\s?.\s{0,2}(.+)' "if fluent snippet" r
+{% if `!p snip.rv=match.group(1)` %}
+	$0
+{% endif %}
+endsnippet
+
+snippet { "{{ }}" bi
+{{ $0 }}
+endsnippet
+
+snippet for "for foo in bar"
+{% for var in collection %}
+	$0
+{% endfor %}
+endsnippet
+
+snippet '\s?(\S+?).for' "" r
+{% for ${1:item} in `!p snip.rv=match.group(1)` %}
+	$0
+{% endfor %}
+endsnippet
