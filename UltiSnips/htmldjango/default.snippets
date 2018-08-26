@@ -10,7 +10,7 @@ snippet staticfiles "load staticfiles" bi
 {% load staticfiles  %}
 endsnippet
 
-snippet di "django inline" bi
+snippet di "django inline" i
 {% $1 %}$0
 endsnippet
 
@@ -45,4 +45,40 @@ snippet '\s?(\S+?).for' "" r
 {% for ${1:item} in `!p snip.rv=match.group(1)` %}
 	$0
 {% endfor %}
+endsnippet
+
+snippet 'block.(\S+)\b' "" r
+{% block `!p snip.rv=match.group(1)` %}
+	$0
+{% endblock `!p snip.rv=match.group(1)` %}
+endsnippet
+
+snippet bsuper "block.super" i
+{{ block.super }}
+endsnippet
+
+snippet isauth "check if user is authenticated"
+{% if user.is_authenticated %}
+		$0
+{% endif %}
+endsnippet
+
+snippet login "" i
+{% url 'auth_login' %}
+endsnippet
+
+snippet logout "" i
+{% url 'auth_logout' %}
+endsnippet
+
+snippet register "" i
+{% url 'registration_register' %}
+endsnippet
+
+snippet 'ahref.(.+?)\b' "a href {% url %}" ri
+<a href="{% url '`!p snip.rv = match.group(1)`' %}">$0</a>
+endsnippet
+
+snippet submit "" bi
+<input type="submit" value="${1:Submit}" />
 endsnippet

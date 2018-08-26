@@ -79,9 +79,46 @@ endsnippet
 
 snippet registrationconf "config of registration 2.0"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'testing@example.com'
+DEFAULT_FROM_EMAIL = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 EMAIL_PORT = 1025
+
+LOGIN_REDIRECT_URL = ''
+endsnippet
+
+snippet render "render a page" bi
+${1:return} render(${2:request}, '$0', {})
+endsnippet
+
+snippet passviews
+from django.contrib.auth.views import (
+	PasswordResetView,
+	PasswordResetDoneView,
+	PasswordResetConfirmView,
+	PasswordResetCompleteView,
+)
+endsnippet
+
+snippet pathspass
+path('accounts/password/reset/', PasswordResetView.as_view(),
+	 {'template_name': 'registration/password_reset_form.html'},
+	 name='password_reset'),
+path('accounts/password/reset_done/', PasswordResetDoneView.as_view(),
+	 {'template_name': 'registration/password_reset_done.html'},
+	 name='password_reset_done'),
+path('accounts/password/reset/<uidb64>/<token>/',
+	 PasswordResetConfirmView.as_view(),
+	 {'template_name': 'registration/password_reset_confirm.html'},
+	 name='password_reset_confirm'),
+path('accounts/password/done/', PasswordResetCompleteView.as_view(),
+	 {'template_name': 'registration/password_reset_complete.html'},
+	 name='password_reset_complete'),
+path('accounts/password/change/', PasswordChangeView.as_view(),
+	 {'template_name': 'registration/password_change_form.html'},
+	 name='password_change'),
+path('accounts/password/change/done/',
+	 PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'),
+	 name='password_change_done'),
 endsnippet
