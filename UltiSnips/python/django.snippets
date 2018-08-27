@@ -34,8 +34,20 @@ snippet fieldtext "TextField" bi
 ${1:textfield} = models.TextField()$0
 endsnippet
 
+snippet fielddatetime "DateTimeField"
+${1:datetimefield} = models.DateTimeField('$2')$0
+endsnippet
+
 snippet slugfield "SlugField" bi
 ${1:slug} = models.SlugField(unique=True)$0
+endsnippet
+
+snippet fk "ForeignKey" i
+${1:parent} = models.ForeignKey(${1/./\u$0/}, on_delete=models.CASCADE)
+endsnippet
+
+snippet intfield "IntegerField" i
+${1:myint} = models.IntegerField(default=0)$0
 endsnippet
 
 snippet modeladmin "Model admin"
