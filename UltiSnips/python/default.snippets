@@ -5,3 +5,15 @@ snippet #! "Shebang header for python scripts" b
 # -*- coding: utf-8 -*-
 $0
 endsnippet
+
+snippet '(\s+)(\S.+)\.if$' "" r
+`!p snip.rv = match.group(1) + 'if ' + match.group(2)`:
+	`!p snip.rv = match.group(1)`$0
+endsnippet
+
+snippet '(\s+)(\S.+)\.ife(|l|ls|lse)$' "" r
+`!p snip.rv = match.group(1) + 'if ' + match.group(2)`:
+	`!p snip.rv = match.group(1)`${1:pass}
+`!p snip.rv = match.group(1)`else:
+	`!p snip.rv = match.group(1)`${0:pass}
+endsnippet
