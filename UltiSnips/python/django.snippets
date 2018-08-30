@@ -132,7 +132,25 @@ if request.method == 'POST':
 	$0
 endsnippet
 
-snippet '(\S+).valid' "if group(1).is_valid():" r
+snippet '(\S+)\.valid' "if group(1).is_valid():" r
 if `!p snip.rv=match.group(1)`.is_valid():
 	$0
+endsnippet
+
+snippet testclass
+class ${1}Test(TestCase):
+	def test_$2(self):
+		pass$0
+endsnippet
+
+snippet '(?<=\s)(\S.+)\.test' "test template" r
+def test`!p
+import re
+snip.rv = re.sub(r'(^\w|\s(\w))', lambda m: '_' + m.group(1).strip(), match.group(1))
+`(self):
+	pass
+endsnippet
+
+snippet sae "self.assertEquals()"
+self.assertEquals(${1:current}, ${2:expected})
 endsnippet
