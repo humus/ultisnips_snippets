@@ -6,14 +6,14 @@ snip.rv = match.group(1) + ', ' + match.group(2)
 `),
 endsnippet
 
-snippet '(\S+)[,.]\s{0,2}(\S+).path' "path snippet" r
+snippet '(\S+),\s{0,2}(\S+).path' "path snippet" r
 path(`!p
-snip.rv = "'" + match.group(1) + "', " + match.group(2)
+snip.rv = "'" + match.group(1) + "', " + match.group(2).strip()
 `),
 endsnippet
 
-snippet '(\s*)([$0-9A-Za-z_]*).ret' "Return snippet" r
-return `!p
+snippet '(\s+)(\S.*).ret' "Return snippet" r
+`!p
 snip.rv = match.group(1) + 'return ' + match.group(2)`
 endsnippet
 
@@ -64,7 +64,7 @@ snippet '(\S+).all' "objects.all" r
 `!p snip.rv = match.group(1)`.objects.all()
 endsnippet
 
-snippet '(\S+).get' "objects.get()" r
+snippet '(\S+)\.get' "objects.get()" r
 `!p snip.rv = match.group(1)`.objects.get($0)
 endsnippet
 
@@ -139,6 +139,11 @@ snippet reloneone "" bi
 models.OneToOneField(${1:Left}, on_delete=models.CASCADE, blank=True, null=True)
 endsnippet
 
+snippet ifget "if request.method == 'GET':"
+if request.method == 'GET':
+	$0
+endsnippet
+
 snippet ifpost "if request.method == 'POST':"
 if request.method == 'POST':
 	$0
@@ -178,4 +183,38 @@ endsnippet
 snippet classform "class FormForm(forms.Form):"
 class $1Form(forms.Form):
 	pass$0
+endsnippet
+
+snippet '(\S+)\.s(elf|el|e)?' "" r
+def `!p snip.rv=match.group(1)`(self$1):
+	${2:pass}$0
+endsnippet
+
+snippet 's(elf|el|e)?\.' "" ri
+self.${1:none}$0
+endsnippet
+
+## rest_framework ##
+snippet iserializers "import serializer"
+from rest_framework import serializers
+endsnippet
+
+snippet serializer
+class ${1:Model}Serializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = $1
+		fields = (${2:'name'}, $0)
+endsnippet
+
+snippet apiview "@api_view['METHOD']"
+@api_view(['${1:GET}'])
+def ${2:viewname}(request${3}):
+	"""
+	${4:docstring}
+	"""
+	${0}
+endsnippet
+
+snippet retdata "return Resonse(serializer.data)"
+	return Response(${1:serializer}.data)
 endsnippet

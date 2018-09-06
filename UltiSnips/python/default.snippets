@@ -31,3 +31,10 @@ snippet _str ""
 def __str__(self):
 	return self.${1}$0
 endsnippet
+
+snippet try
+try:
+	$0
+except ${1:Exception}:
+	pass
+endsnippet
