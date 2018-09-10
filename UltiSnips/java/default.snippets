@@ -5,6 +5,8 @@ def package_define(path):
   no_src = re.sub('^(main|test)\.', '', no_src)
   no_src = re.sub('^java\.', '', no_src)
   return re.sub('\.java$', '', no_src)
+
+
 def expand(text, jump_pos=1):
   if snip.tabstop != jump_pos:
     return
@@ -56,3 +58,8 @@ else:
   snip.rv = match.group(1) + 'return ' + match.group(2) + ';'`
 endsnippet
 
+snippet '(.* ){{$' "expand method body" rbA
+`!p snip.rv = match.group(1) + "{"`
+	$0
+}
+endsnippet
