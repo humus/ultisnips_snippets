@@ -1,0 +1,6 @@
+snippet djangopytest "[pytest]DJANGO_SETTINGS..." b
+[pytest]
+DJANGO_SETTINGS_MODULE = ${1:project}.test_settings
+addopts = --nomigrations
+norecursedirs = .git
+endsnippet
