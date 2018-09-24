@@ -1,5 +1,19 @@
 priority -50
 
+global !p
+def format_test_name():
+    bufline = snip.snippet_start[0]
+    re_test = re.compile(r'(def test_)(.+):')
+    text = snip.buffer[bufline]
+    replacement = lambda m: m.group(1) + space_to_underscore(m.group(2))
+    text = re_test.sub(replacement, text)
+    snip.buffer[bufline] = text
+
+def space_to_underscore(text):
+    return re.sub(r'\s', '_', text)
+
+endglobal
+
 snippet #! "Shebang header for python scripts" b
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -53,4 +67,23 @@ snip.rv = re.sub(r'(^\w|\s(\w))', lambda m: '_' + m.group(1).strip(), match.grou
 `(self):
 	pass
 endsnippet
+
+snippet '\S+((?: \S+){1,10})(?<!_)(_{1,9})' "turns written text into snake_case" ir
+`!p import re
+times = len(match.group(2)) - 1
+retstring = re.sub('(.*\S+) (\S+)_(.*)', r'\1_\2\3', match.group(0))
+while times > 0:
+	if not ' ' in retstring:
+		break
+	times -= 1
+	retstring = re.sub('(.*\S+) (\S+)_(.*)', r'\1_\2\3', retstring)
+snip.rv=retstring`
+endsnippet
+
+post_jump "if snip.tabstop == 0: format_test_name()"
+snippet test "Description" b
+def test_$1():
+	$0
+endsnippet
+
 
