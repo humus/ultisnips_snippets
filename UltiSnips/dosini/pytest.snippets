@@ -1,6 +1,16 @@
+global !p
+
+def file_dirname():
+	full_path = os.path.abspath(path)
+	lpath=re.sub(r'(.+)/[^/]+$', r'\1', full_path)
+	lpath=re.sub(r'.+/([^/]+)$', r'\1', lpath)
+	return lpath
+
+endglobal
+
 snippet djangopytest "[pytest]DJANGO_SETTINGS..." b
 [pytest]
-DJANGO_SETTINGS_MODULE = ${1:project}.test_settings
+DJANGO_SETTINGS_MODULE = `!p snip.rv=file_dirname()`.test_settings
 addopts = --nomigrations
 norecursedirs = .git
 endsnippet

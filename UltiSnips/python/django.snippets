@@ -206,7 +206,7 @@ snippet retdata "return Resonse(serializer.data)"
 endsnippet
 
 snippet memorysettings "DATABASES={...}" b
-from .setttings import *
+from .settings import *
 
 DATABASES = {
 		"default": {
@@ -216,3 +216,17 @@ DATABASES = {
 }
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 endsnippet
+
+snippet testview "test for views" b
+import pytest
+
+pytestmark = pytest.mark.django_db
+
+def test_$1(client):
+	${0:pass}
+endsnippet
+
+snippet 'intempl(ates?)' "[t.name in for t in response.templates]" r
+assert '$1' in [t.name for t in response.templates]
+endsnippet
+

@@ -1,0 +1,10 @@
+global !p
+import os
+endglobal
+snippet .path "file path" i
+`!p 
+full_path = os.path.abspath(path)
+lpath=re.sub(r'(.+)/[^/]+$', r'\1', full_path)
+lpath=re.sub(r'.+/([^/]+)$', r'\1', lpath)
+snip.rv=lpath`
+endsnippet

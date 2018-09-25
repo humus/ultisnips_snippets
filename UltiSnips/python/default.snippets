@@ -3,7 +3,7 @@ priority -50
 global !p
 def format_test_name():
     bufline = snip.snippet_start[0]
-    re_test = re.compile(r'(def test_)(.+):')
+    re_test = re.compile(r'(def test_)(.+:)')
     text = snip.buffer[bufline]
     replacement = lambda m: m.group(1) + space_to_underscore(m.group(2))
     text = re_test.sub(replacement, text)
@@ -82,8 +82,8 @@ endsnippet
 
 post_jump "if snip.tabstop == 0: format_test_name()"
 snippet test "Description" b
-def test_$1():
-	$0
+def test_$1(${2:self}):
+	${0:pass}
 endsnippet
 
 
