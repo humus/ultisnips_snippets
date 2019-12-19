@@ -4,7 +4,7 @@ def package_define(path):
   no_src = re.sub('/', '.', no_src)
   no_src = re.sub('^(main|test)\.', '', no_src)
   no_src = re.sub('^java\.', '', no_src)
-  return re.sub('\.java$', '', no_src)
+  return re.sub('\.\w+\.java$', '', no_src) + ";"
 
 
 def expand(text, jump_pos=1):
@@ -21,7 +21,7 @@ snippet { "{}"
 endsnippet
 
 
-snippet 'test (\S+(\s+\S+)*)+$' "A simple test for java code" r
+snippet '(?<!\w\s)test (\S+(\s+\S+)*)+$' "A simple test for java code" r
 @Test
 public void test`!p
 import re
@@ -62,4 +62,81 @@ snippet '(.* ){{$' "expand method body" rbA
 `!p snip.rv = match.group(1) + "{"`
 	$0
 }
+endsnippet
+
+snippet out "expand to system.out.println" i
+System.out.println(${0:${VISUAL:""}});
+endsnippet
+
+snippet if "if(something){}" b
+if (${VISUAL}) {
+	$0
+}
+endsnippet
+
+snippet logger "Logger log = LoggerFactory.getLogger(...)" b
+private static final Logger log = LoggerFactory.getLogger(`!p snip.rv=re.sub(r'(\w+)\.(\w+)$', r'\1', snip.fn)`.class);
+endsnippet
+
+snippet log "log variable" b
+log.debug("$1: {}", ${1:${VISUAL:foo}});$0
+endsnippet
+
+snippet '(?<!(\w\s|.\w))d (.+)$' "log any string" r
+`!p
+snip.rv = "log.debug(\"" + match.group(2) + "\");"`
+endsnippet
+
+snippet 'echo (.+)$' "log any string" r
+`!p
+snip.rv = "log.info(\"" + match.group(1) + "\");"`
+endsnippet
+
+snippet 'private\s{1,2}(\S+(\s+\S+)*)+$' "fluent private variable" r
+`!p
+import re
+dataType = re.sub(r'(^\w|\s(\w))', lambda m: m.group(1).strip().capitalize(), match.group(1))
+snip.rv = "private " + dataType[0].upper() + dataType[1:] + " " + dataType[0].lower() + dataType[1:] + ';'`
+endsnippet
+
+snippet '^(\s+)mock? (\w+)' "@Mock private..." r
+`!p snip.rv = match.group(1)`@Mock
+`!p snip.rv = match.group(1)`private `!p
+snip.rv = match.group(2)[0].upper() + match.group(2)[1:]
+` `!p
+snip.rv = match.group(2)[0].lower() + match.group(2)[1:]
+`;
+endsnippet
+
+snippet '(awired?|auto|wired) (\w+)' "@Autowired private..." r
+@Autowired
+private `!p
+snip.rv = match.group(2)[0].upper() + match.group(2)[1:]
+` `!p
+snip.rv = match.group(2)[0].lower() + match.group(2)[1:]
+`;
+endsnippet
+
+snippet n "new" b
+${1/(.)(.+)/\u$1$2/} ${1:type} = new ${1/(.)(.+)/\u$1$2/}($0);
+endsnippet
+
+snippet '(\w+)\.n(ew)?' "object object = new object" r
+`!p
+type = match.group(1)
+snip.rv = type[0].upper() + type[1:] + " " + type[0].lower() + type[1:]  + " = new " + type[0].upper() + type[1:] + "();"
+`
+endsnippet
+
+snippet 'value (\w+) as (\w+)' "@Value" r
+@Value("\${$0}")
+private `!p
+snip.rv = match.group(2)[0].upper() + match.group(2)[1:]
+` `!p
+snip.rv=match.group(1)`;
+endsnippet
+
+snippet 'this\.(\w+)' "this.x = x" r
+`!p snip.rv = match.group(0)` = `!p snip.rv = match.group(1)`;
+
 endsnippet
