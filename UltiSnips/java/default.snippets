@@ -12,6 +12,12 @@ def expand(text, jump_pos=1):
     return
   vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
 
+def lowfirst(text):
+  return text[0].lower() + text[1:]
+
+def upfirst(text):
+  return text[0].upper() + text[1:]
+
 endglobal
 
 snippet { "{}"
@@ -82,6 +88,10 @@ snippet log "log variable" b
 log.debug("$1: {}", ${1:${VISUAL:foo}});$0
 endsnippet
 
+snippet debug "log.debug(...)" b
+log.debug("$0");
+endsnippet
+
 snippet '(?<!(\w\s|.\w))d (.+)$' "log any string" r
 `!p
 snip.rv = "log.debug(\"" + match.group(2) + "\");"`
@@ -92,28 +102,21 @@ snippet 'echo (.+)$' "log any string" r
 snip.rv = "log.info(\"" + match.group(1) + "\");"`
 endsnippet
 
-snippet 'private\s{1,2}(\S+(\s+\S+)*)+$' "fluent private variable" r
-`!p
-import re
-dataType = re.sub(r'(^\w|\s(\w))', lambda m: m.group(1).strip().capitalize(), match.group(1))
-snip.rv = "private " + dataType[0].upper() + dataType[1:] + " " + dataType[0].lower() + dataType[1:] + ';'`
-endsnippet
-
 snippet '^(\s+)mock? (\w+)' "@Mock private..." r
 `!p snip.rv = match.group(1)`@Mock
 `!p snip.rv = match.group(1)`private `!p
-snip.rv = match.group(2)[0].upper() + match.group(2)[1:]
+snip.rv = upfirst(match.group(2))
 ` `!p
-snip.rv = match.group(2)[0].lower() + match.group(2)[1:]
+snip.rv = lowfirst(match.group(2))
 `;
 endsnippet
 
 snippet '(awired?|auto|wired) (\w+)' "@Autowired private..." r
 @Autowired
 private `!p
-snip.rv = match.group(2)[0].upper() + match.group(2)[1:]
+snip.rv = upfirst(match.group(2))
 ` `!p
-snip.rv = match.group(2)[0].lower() + match.group(2)[1:]
+snip.rv = lowfirst(match.group(2))
 `;
 endsnippet
 
@@ -131,12 +134,63 @@ endsnippet
 snippet 'value (\w+) as (\w+)' "@Value" r
 @Value("\${$0}")
 private `!p
-snip.rv = match.group(2)[0].upper() + match.group(2)[1:]
+snip.rv = upfirst(match.group(2))
 ` `!p
 snip.rv=match.group(1)`;
 endsnippet
 
 snippet 'this\.(\w+)' "this.x = x" r
 `!p snip.rv = match.group(0)` = `!p snip.rv = match.group(1)`;
+endsnippet
 
+snippet securityconfig "security configuration, basic" b
+package `!p snip.rv=package_define(path)`
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@Configuration
+public class `!p snip.rv=re.sub(r'(\w+)\.(\w+)$', r'\1', snip.fn)` extends WebSecurityConfigurerAdapter {
+
+	private static final Logger log = LoggerFactory.getLogger(`!p snip.rv=re.sub(r'(\w+)\.(\w+)$', r'\1', snip.fn)`.class);
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		log.debug("configuring http: {}", http);
+		http
+				.csrf().disable()
+				.authorizeRequests().anyRequest().authenticated()
+				.and()
+				.httpBasic();
+	}
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		log.debug("configuring global: {}", auth);
+		auth.inMemoryAuthentication()
+				.withUser("admin")
+				.password("{noop}admin")
+				.roles("ADMIN");
+	}
+}
+endsnippet
+
+snippet '(catch|try) (\w+)' "try catch exception" r
+try {
+	
+}
+catch (`!p snip.rv = match.group(2)` `!p
+snip.rv = lowfirst(match.group(2))`) {
+	String message = `!p
+snip.rv = lowfirst(match.group(2))`.getMessage();
+	log.info("`!p
+snip.rv = lowfirst(match.group(2))`.getMessage(): {}", message);
+	$0
+}
 endsnippet

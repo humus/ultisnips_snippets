@@ -1,0 +1,120 @@
+global !p
+def lowfirst(text):
+  return text[0].lower() + text[1:]
+
+def upfirst(text):
+  return text[0].upper() + text[1:]
+endglobal
+snippet main "func main(){...}" b
+func main() {
+	$0
+}
+endsnippet
+
+snippet 'tup(le)?' "Description" r
+${1:value}, ${2:_} := ${0}
+endsnippet
+
+snippet '(\S+)(\.| )is' "assign value" r
+`!p snip.rv=match.group(1) + " := "`$0
+endsnippet
+
+snippet 'if (.+?\S.+)' "if snippet" r
+if `!p snip.rv=match.group(1)` {
+	$0
+}
+endsnippet
+
+snippet 'print\s+(\S.*)' "fmt.printf" r
+fmt.Println("`!p snip.rv=match.group(1)`")
+endsnippet
+
+snippet '(\S+)\.t(up)?' "tupple 2" r
+`!p snip.rv = match.group(1)`, _ := ${0}
+endsnippet
+
+snippet fun "func ..." b
+func $1() {
+	$0
+}
+endsnippet
+
+snippet 'type.(\w+)' "struct snippet" r
+type `!p snip.rv = match.group(1)[0].upper()+match.group(1)[1:]` struct {
+$0
+}
+endsnippet
+
+snippet '(\s*)(\w+) as (\w+)(,)?' "struct members" r
+`!p snip.rv = match.group(1)+match.group(2)[0].upper()+match.group(2)[1:]
+` `!p snip.rv = match.group(3)
+``!p
+if (match.group(4) == ','):
+	snip.rv='\n'+match.group(1)
+else:
+	snip.rv=''`
+endsnippet
+
+snippet test "func Test..." b
+func Test${1}(t *testing.T) {
+	$0
+}
+endsnippet
+
+snippet '(\w+) (\S+)( |\.)json' "to json annotation" r
+`!p snip.rv=match.group(1)[0].upper() + match.group(1)[1:]` `!p
+snip.rv=match.group(2)` `!p
+prop_name = match.group(1)
+snip.rv = '\`json:"' + lowfirst(prop_name)+',omitempty"\`'`
+endsnippet
+
+snippet '(\w+) (\S+)\.url' "to url annotation" r
+`!p snip.rv=match.group(1)` `!p
+propName = match.group(1)
+snip.rv = match.group(2)+' \`url:"'+ propName[0].lower() + propName[1:]+',omitempty"\`'`
+endsnippet
+
+
+snippet readresponse "read response bytes" b
+bytesBody, _ := ioutil.ReadAll(${1:response}.Body)
+endsnippet
+
+snippet unmarshal "Description" b
+var data ${1:StructType}
+json.Unmarshal(${2:sourceBytes}, &$1)
+endsnippet
+
+snippet 'bytesto.(\S+)' "bytes to type" r
+var ${1:data} `!p snip.rv = match.group(1)`
+_ = json.Unmarshal(${2:sourceBytes}, &$1)
+
+fmt.Println($1)
+endsnippet
+
+snippet tparam "t *testing.T" i
+t *testing.T
+endsnippet
+
+snippet '(\S+)\.vprint' "print raw" r
+fmt.Println(fmt.Sprintf("`!p snip.rv = match.group(1)` is: %+v", `!p snip.rv = match.group(1)`))
+endsnippet
+
+snippet to_interface "response body unmarshal to inteface" b
+${1:response}, _ := client.Do(${2:request})
+defer $1.Body.Close()
+bodyBytes, _ := ioutil.ReadAll(response.Body) // io/ioutil
+responseMap := make(map[string]interface{})
+errunmarshal := json.Unmarshal(bodyBytes, &responseMap) // encoding/json
+
+if errunmarshal != nil {
+	fmt.Println("unknown error")
+}
+
+fmt.Printf(responseMap)
+endsnippet
+
+snippet 'test.(\w)(\w+)' "fluent test snippet" r
+func Test`!p snip.rv=match.group(1).upper()+match.group(2)`(t *testing.T) {
+$0
+}
+endsnippet
