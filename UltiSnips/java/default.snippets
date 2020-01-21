@@ -194,3 +194,7 @@ snip.rv = lowfirst(match.group(2))`.getMessage(): {}", message);
 	$0
 }
 endsnippet
+
+snippet '\w+\.\w+' "();" r
+`!p snip.rv = match.group(0)`($0);
+endsnippet
