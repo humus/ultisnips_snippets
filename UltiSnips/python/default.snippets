@@ -86,4 +86,14 @@ def test_$1(${2:self}):
 	${0:pass}
 endsnippet
 
+snippet ifmain "if __name__ == '__main__': " b
+if __name__ == '__main__':
+	${0:pass}
+endsnippet
 
+snippet 'swap ([^,]+),\s*(.+)' "swap assignation" r
+`!p
+snip.rv = match.group(1) + ', ' + match.group(2) + ' = '
+snip.rv += match.group(2) + ', ' + match.group(1)
+`
+endsnippet
